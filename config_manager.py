@@ -4,11 +4,11 @@ import os
 CONFIG_PATH = os.path.join(os.path.expanduser("~"), ".LoLChampionTracker", "config.json")
 
 DEFAULT_CONFIG = {
-    "REGION": "tr",
-    "SUMMONER_NAME": "milföysu-1044",
-    "CHAMPION": "morgana",
-    "CHECK_INTERVAL": 300,
-    "LANGUAGE": "tr"
+    "REGION": "KR",
+    "SUMMONER_NAME": "Hide+on+bush-KR1",
+    "CHAMPION": "ryze",
+    "CHECK_INTERVAL": 600,
+    "LANGUAGE": "en"
 }
 
 def load_config():
