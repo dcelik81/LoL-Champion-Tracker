@@ -5,7 +5,7 @@ import sys
 def setup_logging():
     user_home = os.path.expanduser("~")
     
-    app_folder_name = "LolSiralamaTakip"
+    app_folder_name = ".LoLChampionTracker"
     log_folder_path = os.path.join(user_home, app_folder_name)
 
     if not os.path.exists(log_folder_path):

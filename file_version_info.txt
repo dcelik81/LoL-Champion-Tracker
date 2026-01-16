@@ -14,14 +14,14 @@ VSVersionInfo(
       [
       StringTable(
         '040904B0',
-        [StringStruct('CompanyName', 'github:dcelik81'),
-        StringStruct('FileDescription', 'LoL Sıralama Takibi'),
-        StringStruct('FileVersion', '1.0.0'),
-        StringStruct('InternalName', 'LolSiralamaTakibi'),
-        StringStruct('LegalCopyright', '© 2026 dcelik81. Tüm hakları saklıdır.'),
-        StringStruct('OriginalFilename', 'LolSiralamaTakibi.exe'),
-        StringStruct('ProductName', 'LoL Sıralama Takibi'),
-        StringStruct('ProductVersion', '1.0.0')])
+        [StringStruct('CompanyName', 'dcelik81@github'),
+        StringStruct('FileDescription', 'LoL Champion Tracker'),
+        StringStruct('FileVersion', '1.0.3'),
+        StringStruct('InternalName', 'LoLChampionTracker'),
+        StringStruct('LegalCopyright', '2026 dcelik81@github, Open-Source.'),
+        StringStruct('OriginalFilename', 'LoLChampionTracker.exe'),
+        StringStruct('ProductName', 'LoL Champion Tracker'),
+        StringStruct('ProductVersion', '1.0.3')])
       ]
     ),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])
