@@ -7,12 +7,12 @@ import sys
 from win10toast import ToastNotifier
 from pystray import Icon, Menu, MenuItem
 from PIL import Image, ImageDraw
+import os
 
-# SSL uyarılarını kapat
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 toaster = ToastNotifier()
 
-# --- AYARLAR ---
 REGION = "tr"
 SUMMONER_NAME = "milföysu-1044"
 CHAMPION = "morgana"
@@ -39,10 +39,20 @@ def get_rank():
         return None
 
 def send_alert(title, message):
-    toaster.show_toast(title, message, duration=5, threaded=True)
+    ico_path = resource_path("icon.ico")
+    
+    if not os.path.exists(ico_path):
+        ico_path = None
+        
+    toaster.show_toast(
+        title, 
+        message, 
+        icon_path=ico_path,
+        duration=5, 
+        threaded=True
+    )
 
 def manual_check(icon=None):
-    """Menüden tıklandığında anlık kontrol yapar."""
     global current_ranks
     new_ranks = get_rank()
     if new_ranks:
@@ -53,35 +63,36 @@ def manual_check(icon=None):
         send_alert("Hata", "Veri çekilemedi.")
 
 def background_task():
-    """Arka planda periyodik kontrol yapar."""
     global current_ranks
     while True:
         time.sleep(CHECK_INTERVAL)
         new_ranks = get_rank()
         if new_ranks and new_ranks != current_ranks:
-            # Karşılaştırma ve bildirim mantığı buraya...
             current_ranks = new_ranks
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 def load_icon():
-    img = Image.open("icon.JPG")
+    path = resource_path("icon.ico")
+    img = Image.open(path)
     return img
 
 def on_quit(icon, item):
     icon.stop()
     sys.exit()
 
-# System Tray Menüsü
 icon = Icon("LoL Sıralama", load_icon(), menu=Menu(
     MenuItem("Güncel Sıralamayı Çek", manual_check),
     MenuItem("Kapat", on_quit)
 ))
 
 if __name__ == "__main__":
-    # Arka plan kontrolünü ayrı bir thread olarak başlat
     threading.Thread(target=background_task, daemon=True).start()
-    
-    # Program başlar başlamaz bir kontrol yap
     manual_check()
-    
-    # Tray ikonunu çalıştır
     icon.run()

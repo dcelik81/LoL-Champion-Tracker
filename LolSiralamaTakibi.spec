@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
 
-datas = []
+datas = [('icon.ico', '.')]
 binaries = []
 hiddenimports = []
 tmp_ret = collect_all('win10toast')
@@ -29,7 +29,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='main',
+    name='LolSiralamaTakibi',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -42,4 +42,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['icon.ico'],
 )

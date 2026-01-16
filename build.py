@@ -5,10 +5,13 @@ def run_build():
     
     command = [
         "pyinstaller",
+        "--clean",
         "--onefile",
         "--noconsole",
-        "--name", "main",
+        "--icon", "icon.ico",
+        "--name", "LolSiralamaTakibi",
         "--collect-all", "win10toast",
+        "--add-data", "icon.ico;.",
         "main.py"
     ]
     
