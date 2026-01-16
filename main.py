@@ -9,23 +9,29 @@ from pystray import Icon, Menu, MenuItem
 from PIL import Image
 from logger import logger
 import os
+from config_manager import config
+from translations import get_translations, get_champion
+
+current_lang_code = config.get("LANGUAGE", "tr")
+T = get_translations(current_lang_code)
+
+REGION = config.get("REGION", "KR")
+SUMMONER_NAME = config.get("SUMMONER_NAME", "Hide+on+bush-KR1")
+CHAMPION = get_champion(config.get("CHAMPION", "ryze"))
+CHECK_INTERVAL = config.get("CHECK_INTERVAL", 600)
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 toaster = ToastNotifier()
 
-REGION = "tr"
-SUMMONER_NAME = "milföysu-1044"
-CHAMPION = "morgana"
-CHECK_INTERVAL = 300 
-
-url = f"https://www.leagueofgraphs.com/tr/summoner/champions/{CHAMPION}/{REGION}/{SUMMONER_NAME}"
+url = f"https://www.leagueofgraphs.com/tr/summoner/champions/{config.get("CHAMPION", "ryze")}/{REGION}/{SUMMONER_NAME}"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36..."}
 
-current_ranks = {"world": 0, "tr": 0}
+current_ranks = {"world": 0, REGION: 0}
 
 def get_rank():
-    logger.info(f"Sıralama kontrol ediliyor: {SUMMONER_NAME}")
+    logger.info(f"{T['searching']}: {url}")
+    logger.info(f"{T['searching']}: {SUMMONER_NAME} - {CHAMPION} - {REGION}")
     try:
         response = requests.get(url, headers=headers, verify=False, timeout=10)
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -34,15 +40,15 @@ def get_rank():
         results = {}
         if len(ranks) >= 2:
             results["world"] = int(ranks[0].text.strip().replace('#', '').replace(',', ''))
-            results["tr"] = int(ranks[1].text.strip().replace('#', '').replace(',', ''))
-            logger.info("Veri başarıyla çekildi.")
-            logger.info(f"Veriler: {results}")
+            results[REGION] = int(ranks[1].text.strip().replace('#', '').replace(',', ''))
+            logger.info(T['fetching_success'])
+            logger.info(f"{T['datas']}: {results}")
             return results
         
-        logger.warning("Sıralama verisi site içinde bulunamadı.")
+        logger.warning(T['data_not_found'])
         return None
     except Exception as e:
-        logger.error(f"Hata oluştu: {e}")
+        logger.error(f"{T['error_title']}: {e}")
         return None
 
 def send_alert(title, message):
@@ -63,11 +69,11 @@ def manual_check():
     global current_ranks
     new_ranks = get_rank()
     if new_ranks:
-        msg = f"Dünya: #{new_ranks['world']} | TR: #{new_ranks['tr']}"
-        send_alert("Güncel Sıralaman", msg)
+        msg = f"{SUMMONER_NAME.split('-')[0]}\n{T['world']}: #{new_ranks['world']} | {T[REGION]}: #{new_ranks[REGION]}"
+        send_alert(f"{T['alert_title']} {CHAMPION}", msg)
         current_ranks = new_ranks
     else:
-        send_alert("Hata", "Veri çekilemedi. Detayları log dosyasında bulabilirsiniz.")
+        send_alert(T['error_title'], T['error_msg'])
 
 def background_task():
     global current_ranks
@@ -94,10 +100,14 @@ def on_quit(icon, item):
     icon.stop()
     sys.exit()
 
-icon = Icon("LoL Sıralama", load_icon(), menu=Menu(
-    MenuItem("Güncel Sıralamayı Çek", manual_check),
-    MenuItem("Kapat", on_quit)
-))
+icon = Icon(
+    f"LoL {T['alert_title']} {CHAMPION}", 
+    load_icon(),
+    menu=Menu(
+        MenuItem(f"{T['menu_check']}", manual_check),
+        MenuItem(f"{T['menu_quit']}", on_quit)
+    )
+)
 
 if __name__ == "__main__":
     threading.Thread(target=background_task, daemon=True).start()
