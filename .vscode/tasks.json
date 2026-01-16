@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "PyInstaller Build",
+            "type": "shell",
+            "command": "pyinstaller --onefile --noconsole --name \"lol_siralama\" --collect-all win10toast main.py",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
