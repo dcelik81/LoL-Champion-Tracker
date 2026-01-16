@@ -9,7 +9,7 @@ def run_build():
         "--onefile",
         "--noconsole",
         "--icon", "icon.ico",
-        "--name", "LolSiralamaTakibi",
+        "--name", "LoLChampionTracker",
         "--collect-all", "win10toast",
         "--add-data", "icon.ico;.",
         "main.py"

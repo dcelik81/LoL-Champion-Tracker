@@ -4,7 +4,7 @@
         {
             "label": "PyInstaller Build",
             "type": "shell",
-            "command": ".\\venv\\Scripts\\pyinstaller LolSiralamaTakibi.spec",
+            "command": ".\\.venv\\Scripts\\pyinstaller LoLChampionTracker.spec",
             "group": {
                 "kind": "build",
                 "isDefault": true
